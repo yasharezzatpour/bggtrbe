@@ -17,4 +17,10 @@ urlpatterns = [
     path('businesslike/<int:id>' , views.GetBusinessLikes),
     path('businesscomment/<int:id>' , views.GetBusinessComments),
     path('businesstag/<int:id>' , views.GetBusinessTags),
+    path('businessfollower/<int:id>' , views.GetBusinessFollowers),
+    path('businessfollower-delete/<int:id>' , views.DeleteBusienssFollower),
+    path ('businessfollower-post/' , views.PostBusinessFollower),
+    path('businessstaff/<int:id>' , views.GetBusinessStaff),
+    path('businesspartnership/<int:id>' , views.GetBusinessPartnerShip),
+    path('connecttobusiness/<int:id>' , views.GetConnectToBusiness)
 ]

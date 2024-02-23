@@ -2,11 +2,13 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view ,permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import Business , Comparison,Capital,Income,Growth,Staff ,UserBusinessInterests , BusinessTag , BusinessLike , BusinessComment
-from .serializers import BusinessSerializer , ComparisonSerializer , IncomeSerializer ,GrowthSerializer , StaffSerializer , UserBusinessInterestSerializer
+from .models import Business , Comparison,Capital,Income,Growth,Staff ,UserBusinessInterests , BusinessTag , BusinessLike , BusinessComment , BusinessFollower
+from .serializers import BusinessSerializer , ComparisonSerializer , IncomeSerializer ,GrowthSerializer , StaffSerializer , UserBusinessInterestSerializer ,BusinessFollowerSerializer
 from .serializers import CapitalSerializer , BusinessLikeSerializer,BusinessCommentSerializer,BusinessTagSerializer
 from rest_framework import status
 from users.models import User
+from .models import BusinessStaff, BusinessPartnerShip,ConnectToBusiness
+from  .serializers import BusinessStaffSerializer, BusinessPartnerShipSerializer, ConnectToBusinessSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -31,21 +33,11 @@ def GetUserBusiness(request , owner_id):
     return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def GetBusinesses ( request):
     try:
-        limit = request.GET['limit']
-        catagory = request.GET['catagory']
+        businesses = Business.objects.all()
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    try:
-        businesses = Business.objects.filter(catagory=catagory).all()
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    if businesses.count() >= int(limit):
-        businesses = businesses[0:int(limit)]
-    else:
-        businesses = businesses[0:businesses.count()]
     serializer = BusinessSerializer(businesses, many=True)
     return Response(serializer.data)
 
@@ -77,6 +69,36 @@ def GetUserInterestedBusinesses(request):
     serializer  = BusinessSerializer(businesses , many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def GetBusinessFollowers(request  , id):
+    try:
+        businessFollowers = BusinessFollower.objects.filter(business = id).all()
+    except:
+        return  Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = BusinessFollowerSerializer(businessFollowers , many = True)
+    return Response(serializer.data)
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def DeleteBusienssFollower(request , id):
+    try:
+        businessFollower = BusinessFollower.objects.filter(id = id).all()
+        businessFollower.delete()
+    except:
+        return  Response(status=status.HTTP_404_NOT_FOUND)
+    return  Response(status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def PostBusinessFollower(request):
+    try:
+        serializer = BusinessFollowerSerializer(data=request.data)
+    except:
+        return  Response(status=status.HTTP_400_BAD_REQUEST)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        return Response(status = status.HTTP_406_NOT_ACCEPTABLE)
+    return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def GetCapital (request ,id):
@@ -151,3 +173,30 @@ def GetBusinessTags(request , id):
         return Response(status = status.HTTP_404_NOT_FOUND)
     serializer = BusinessTagSerializer(businessTags , many= True)
     return  Response(serializer.data)
+
+@api_view(['GET'])
+def GetBusinessStaff(request , id):
+    try:
+        staff = BusinessStaff.objects.filter(business= id).all()
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = BusinessStaffSerializer(staff , many= True)
+    return  Response(serializer.data)
+
+@api_view(['GET'])
+def GetBusinessPartnerShip(request , id):
+    try:
+        partnerShip = BusinessPartnerShip.objects.filter(business=id).all()
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = BusinessPartnerShipSerializer(partnerShip , many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def GetConnectToBusiness(request , id):
+    try:
+        connectToBusiness = ConnectToBusiness.objects.filter(business=id).all()
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = ConnectToBusinessSerializer(connectToBusiness , many=True)
+    return Response(serializer.data)

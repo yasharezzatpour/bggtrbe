@@ -28,6 +28,10 @@ class UserBusinessInterests(models.Model):
     name = models.CharField(max_length=255)
     business_tag = models.ForeignKey(BusinessTag , on_delete=models.CASCADE)
 
+class BusinessFollower(models.Model):
+    business = models.ForeignKey(Business, on_delete= models.CASCADE)
+    user = models.ForeignKey(User , on_delete= models.CASCADE)
+
 
 class Capital(models.Model):
     for_business = models.ForeignKey(Business , on_delete=models.CASCADE)
@@ -77,3 +81,19 @@ class Comparison(models.Model):
     comparison_of_profit_after_taxes = models.CharField(max_length=255 , null=True , blank= True)
     comparison_of_working_capital = models.CharField(max_length= 255 , null=True , blank= True)
     coparison_of_gross_value_added = models.CharField(max_length= 255 , null= True , blank= True)
+
+
+class BusinessStaff(models.Model):
+    business = models.ForeignKey(Business , on_delete= models.CASCADE)
+    user = models.ForeignKey(User , on_delete= models.CASCADE)
+    detail = models.TextField()
+
+class BusinessPartnerShip(models.Model):
+    business = models.ForeignKey(Business , on_delete= models.CASCADE)
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    detail = models.TextField()
+
+class ConnectToBusiness(models.Model):
+    url = models.CharField(max_length= 255 )
+    business = models.ForeignKey(Business , on_delete= models.CASCADE)
+    name = models.CharField(max_length= 255 , null= True , blank= True)
