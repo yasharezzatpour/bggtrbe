@@ -86,14 +86,27 @@ class Comparison(models.Model):
 class BusinessStaff(models.Model):
     business = models.ForeignKey(Business , on_delete= models.CASCADE)
     user = models.ForeignKey(User , on_delete= models.CASCADE)
+    position = models.CharField(max_length=255)
     detail = models.TextField()
 
 class BusinessPartnerShip(models.Model):
     business = models.ForeignKey(Business , on_delete= models.CASCADE)
     user = models.ForeignKey(User , on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
     detail = models.TextField()
 
 class ConnectToBusiness(models.Model):
     url = models.CharField(max_length= 255 )
     business = models.ForeignKey(Business , on_delete= models.CASCADE)
     name = models.CharField(max_length= 255 , null= True , blank= True)
+
+
+class BusinessCommentLike (models.Model):
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    business = models.ForeignKey(Business , on_delete=models.CASCADE)
+    comment = models.ForeignKey(BusinessComment , on_delete=models.CASCADE)
+
+class BusinessCommentDislike (models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    business = models.ForeignKey(Business, on_delete=models.CASCADE)
+    comment = models.ForeignKey(BusinessComment, on_delete=models.CASCADE)

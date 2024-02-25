@@ -5,7 +5,7 @@ from .models import Income
 from  .models import Growth
 from .models import Staff , BusinessStaff, ConnectToBusiness , BusinessPartnerShip
 from .models import Comparison , UserBusinessInterests ,BusinessLike,BusinessComment,BusinessTag , BusinessFollower
-
+from .models import BusinessCommentLike , BusinessCommentDislike
 class BusinessSerializer (serializers.ModelSerializer):
     class Meta:
         model = Business
@@ -68,10 +68,20 @@ class BusinessStaffSerializer(serializers.ModelSerializer):
 
 class BusinessPartnerShipSerializer(serializers.ModelSerializer):
     class Meta:
-        modle = BusinessPartnerShip
+        model = BusinessPartnerShip
         fields = '__all__'
 
 class ConnectToBusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConnectToBusiness
+        fields = '__all__'
+
+class BusinessCommentLikeSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = BusinessCommentLike
+        fields = '__all__'
+
+class BusinessCommentDislikeSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = BusinessCommentDislike
         fields = '__all__'

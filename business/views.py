@@ -9,6 +9,8 @@ from rest_framework import status
 from users.models import User
 from .models import BusinessStaff, BusinessPartnerShip,ConnectToBusiness
 from  .serializers import BusinessStaffSerializer, BusinessPartnerShipSerializer, ConnectToBusinessSerializer
+from .models import BusinessCommentLike , BusinessCommentDislike
+from .serializers import BusinessCommentLikeSerializer , BusinessCommentDislikeSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -200,3 +202,85 @@ def GetConnectToBusiness(request , id):
         return Response(status=status.HTTP_404_NOT_FOUND)
     serializer = ConnectToBusinessSerializer(connectToBusiness , many=True)
     return Response(serializer.data)
+@api_view(['POST'])
+def PostBusinessLike(request):
+    try:
+        serializer = BusinessLikeSerializer(data=request.data)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def DeleteBusinessLike(request , id):
+    try:
+        businessLike = BusinessLike.objects.filter(id=id).all()
+        businessLike.delete()
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def GetBusinessCommentLikes(request , id):
+    try:
+        businessCommentLikes = BusinessCommentLike.objects.filter(comment=id).all()
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = BusinessCommentLikeSerializer(businessCommentLikes , many= True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def PostBusinessCommentLike (request):
+    try:
+        serializer = BusinessCommentLikeSerializer(data=request.data)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def DeleteBusinessCommentLike(request , id):
+    try:
+        businessCommentLike = BusinessCommentLike.objects.filter(id=id).all()
+        businessCommentLike.delete()
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def GetBusinessCommentDislikes (request , id):
+    try:
+        businessCommentDislikes = BusinessCommentDislike.objects.filter(comment=id).all()
+    except:
+        return  Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = BusinessCommentDislikeSerializer(businessCommentDislikes , many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def PostBusinessCommentDislike (request):
+    try:
+        serializer = BusinessCommentDislikeSerializer(data=request.data)
+
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def DeleteBusinessCommentDislike(request , id):
+    try:
+        businessCommentDislike = BusinessCommentDislike.objects.filter(id=id).all()
+        businessLike.delete()
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    return Response(status=status.HTTP_200_OK)
